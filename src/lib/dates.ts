@@ -25,23 +25,27 @@ import { previousDay, max, isSameDay, parseISO, eachDayOfInterval, startOfMonth,
 import type { HabitCompletions } from "../types";
 import type { Day } from 'date-fns';
 
-const today = new Date();
+//const today = new Date(); передаем today через пропс
 const getPreviousScheduledDate = (date: Date, schedule: Day[]) => max(schedule.map((day: Day) => previousDay(date, day)));
 const getInitialExpected = (today: Date, schedule: Day[]): Date => {
-    let expected = (schedule as readonly number[]).includes(today.getDay()) 
+    const expected = (schedule as readonly number[]).includes(today.getDay()) 
         ? today
         : getPreviousScheduledDate(today, schedule)
         return expected
 }
 
 export const dates = {
-    calculateBestStreak: (habitCompletions: HabitCompletions, schedule: Day []): number => {
+    calculateBestStreak: (habitCompletions: HabitCompletions, schedule: Day [], today: Date): number => {
         let maxStreak = 0;
         let streak = 0;
         let expected = getInitialExpected(today, schedule)
         const dates = Object.keys(habitCompletions).sort((a, b) => b.localeCompare(a));
         dates.forEach(date => {
             const noteDate = parseISO(date); // из строки в формат даты
+            if (isSameDay(parseISO(date), today)) { // поменял на today
+                expected = getPreviousScheduledDate(noteDate, schedule);
+                return;
+            } // если сегодня ждем конца дня
             if (!isSameDay(noteDate, expected)) { // проверяем чтобы это были одинаковые даты 
                 streak = 1;
                 expected = getPreviousScheduledDate(noteDate, schedule); // так как мы пропустили streak надо начинать с текущей даты
@@ -54,13 +58,19 @@ export const dates = {
         return maxStreak;
     },
 
-    calculateStreak: (habitCompletions: HabitCompletions, schedule: Day []): number => {
+    calculateStreak: (habitCompletions: HabitCompletions, schedule: Day [], today: Date): number => {
         let expected = getInitialExpected(today, schedule)
         let streak = 0;
         const dates = Object.keys(habitCompletions) //сортировка на всякий случай
             .sort((a, b) => b.localeCompare(a));
         for (const date of dates) {
-            if (!isSameDay(parseISO(date), expected)) break; // с помощью parseISO из ISO в объект Date, isSameDay проверяет чтобы это были одинаковые даты 
+            const noteDate = parseISO(date);
+            if (isSameDay(noteDate, today)) { // поменял на today
+                expected = getPreviousScheduledDate(expected, schedule); // берем сначала date и проверяем чтобы не была равна expected = today
+                continue; // если равно то пропускаем и меняем expected = getPreviousScheduledDate(expected, schedule);
+            }
+            //if (expected === today) continue // проверка на today пропускаем пока деню не закончился
+            if (!isSameDay(noteDate, expected)) break; // с помощью parseISO из ISO в объект Date, isSameDay проверяет чтобы это были одинаковые даты 
             expected = getPreviousScheduledDate(expected, schedule); // заменяем текущую дату на следующую по хронологии
             streak++
         }
@@ -71,9 +81,9 @@ export const dates = {
         return eachDayOfInterval({ start: startOfMonth(date), end: endOfMonth(date) });
     },
 
-    calculateCompletionRate: (completions, habit, days) => {
+    // calculateCompletionRate: (completions, habit, days) => {
 
-    },
+    // },
     // isHabitDue(habit, date) → true/false (нужно ли делать привычку в этот день — для «по будням» в субботу вернёт false)
 }
 

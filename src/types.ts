@@ -1,15 +1,14 @@
 import type { Day } from "date-fns";
 
-//export type Frequency = {type: 'daily'} | {type: 'weekdays'} | {type: 'custom', days: Day[]}; // держим только массив чисел недель [1,3,5]
-export type HabitCompletions = Record<string, boolean>;
+export type HabitCompletions = Record<string, true>;
 export type Completions = Record<string, HabitCompletions> // храним только успешные дни 
 
 export type SortBy = 'streak' | 'name' | 'createdAt'
 export type FilterBy = 'onlyDueToday' | 'hideCompletedToday';
 
-export type DateNow = {
+export type DateNow = { 
     year: number,
-    month: number
+    month: number // 1 - 12
 }
 
 export type Habit = {
@@ -37,11 +36,12 @@ export type HabitsSlice = {
     completions: Completions
     addHabit: (newHabit: NewHabit) => void
     deleteHabit: (habitId: string) => void
-    toggleDay: (habitId: string, date: string) => void // здесь не уверен в типе но принимать будет completions['habit']["2026-05-13"]
+    doneDay: (habitId: string, date: string) => void // здесь не уверен в типе но принимать будет completions['habit']["2026-05-13"]
+    cancelDoneHabit: (habitId: string, date: string) => void
 }
 
 export type UiSlice = {
-    habitNow: string | null
+    habitNow: string
     dateNow: DateNow
     filter: Filters
     toggleHabit: (habit: string) => void
