@@ -48,7 +48,7 @@ export const dates = {
     },
 
     calculateStreak: (habitCompletions: HabitCompletions, schedule: Day [], today: Date): number => {
-        //проверяем наличие today в complited, если есть то начинаем проверку с сегодня, если нету то пропускаем потому что деню еще не закончился
+        //проверяем наличие today в complited, если есть то начинаем проверку с сегодня, если нету то пропускаем потому что день еще не закончился
         let expected = habitCompletions.hasOwnProperty(today.toISOString()) 
             ? getInitialExpected(today, schedule) 
             : getPreviousScheduledDate(today, schedule)

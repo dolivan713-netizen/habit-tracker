@@ -49,3 +49,10 @@ export type UiSlice = {
     toggleFilter: (filter: FilterBy) => void
     toggleSort: (sort: SortBy) => void
 }
+
+export type PropsDayCell = {
+    date: Date
+    state: PropState
+    click: () => void
+}
+export type PropState = "disabled" | "completed" | "active" | "failed";
