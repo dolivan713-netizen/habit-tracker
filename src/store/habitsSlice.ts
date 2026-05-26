@@ -32,7 +32,6 @@ export const useHabitSlice = create(
             doneDay: (habitId: string, date: string) => set((state) => { // нет проверки, что date соответствует schedule
                 const completions = state.completions[habitId]
                 if(!completions) return;
-                //state.completions[habitId] = {[date]: true, ...completions} //переделал тут
                 state.completions[habitId][date] = true;
             }),
             cancelDoneHabit: (habitId: string, date: string) => set((state) => { //отмена выполнения дня
@@ -41,7 +40,7 @@ export const useHabitSlice = create(
                 delete state.completions[habitId][date];
             })
         })),
-        
+
         {name: 'habit-Slice'}
     )
 )
