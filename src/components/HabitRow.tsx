@@ -1,5 +1,5 @@
 // HabitRow (Строка привычки)
-// Это компонент одной конкретной привычки в списке. Настоящая «рабочая лошадка».
+// Это компонент одной конкретной привычки в списке. 
 
 // Что внутри: Название привычки (например, «Сделать зарядку»), 
 // текущий стрик (огонек с цифрой, которую считает твой метод calculateStreak), 
@@ -9,10 +9,15 @@
 import { useHabitSlice } from "../store/habitsSlice";
 import DayCell from "./DayCell";
 import { Group } from "@mantine/core";
-import { subDays, eachDayOfInterval, isBefore, isSameDay, startOfDay } from 'date-fns';
+import { subDays, eachDayOfInterval, isBefore, isSameDay, startOfDay, format } from 'date-fns';
 import type { HabitCompletions, Habit, PropState } from "../types";
 
-export default function HabitRow(complitedHabits: HabitCompletions, habit: Habit, ) {
+type Props = {
+    complitedHabits: HabitCompletions
+    habit: Habit
+}
+
+export default function HabitRow({complitedHabits, habit}: Props, ) {
     // возможно вынесу логику выше
     const today = new Date();
     const start = subDays(today, 6); //Генерируем массив от "6 дней назад" до "сегодня"
@@ -38,9 +43,9 @@ export default function HabitRow(complitedHabits: HabitCompletions, habit: Habit
             }
         }
         
-        if (complitedHabits.hasOwnProperty(day.toISOString())) {
+        if (complitedHabits[format(day, 'yyyy-MM-dd')] !== undefined) {
             stateProp = 'completed';
-            fnProp = () => cancelDoneHabit(habit.id, day.toISOString())
+            fnProp = () => cancelDoneHabit(habit.id, format(day, 'yyyy-MM-dd'))
             return {
                 stateProp, fnProp
             }
@@ -48,7 +53,7 @@ export default function HabitRow(complitedHabits: HabitCompletions, habit: Habit
         
         if (isSameDay(today, day)) {
             stateProp = 'active';
-            fnProp = () => doneDay(habit.id, day.toISOString())
+            fnProp = () => doneDay(habit.id, format(day, 'yyyy-MM-dd'))
             return {
                 stateProp, fnProp
             }
@@ -66,7 +71,7 @@ export default function HabitRow(complitedHabits: HabitCompletions, habit: Habit
                 
                 return (
                     <DayCell
-                        key={day.toISOString()}
+                        key={format(day, 'yyyy-MM-dd')}
                         date={day}
                         state={stateProp}
                         click={fnProp}

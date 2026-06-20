@@ -53,6 +53,6 @@ export type UiSlice = {
 export type PropsDayCell = {
     date: Date
     state: PropState
-    click: () => void
+    click?: () => void
 }
 export type PropState = "disabled" | "completed" | "active" | "failed";

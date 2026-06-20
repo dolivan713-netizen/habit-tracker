@@ -47,12 +47,15 @@
 // Фильтры и статистика — селекторы поверх готовых данных
 // Шлифовка — persist-миграция, подписка на title, импорт/экспорт
 import FillterBar from "./components/FilterBar"
+import HabitForm from "./components/HabitForm"
+import HabitList from "./components/HabitList"
 export default function App() {
     
     return (
         <div>
-            <h2>Hello App</h2>
             <FillterBar />
+            <HabitList />
+            <HabitForm />
         </div>
     )
 }

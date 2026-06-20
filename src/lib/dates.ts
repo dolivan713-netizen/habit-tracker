@@ -9,7 +9,7 @@
 // 5 дней подряд, потом провал, потом 3 → best 5, current 3
 
 
-import { previousDay, max, isSameDay, parseISO, eachDayOfInterval, startOfMonth, endOfMonth} from 'date-fns';
+import { previousDay, max, isSameDay, parseISO, eachDayOfInterval, startOfMonth, endOfMonth, format} from 'date-fns';
 import type { HabitCompletions } from "../types";
 import type { Day } from 'date-fns';
 
@@ -29,7 +29,7 @@ export const dates = {
         let maxStreak = 0;
         let streak = 0;
         //todayKey = format(today, 'yyyy-MM-dd') //нужно понять какой формат даты будет приходить, нужно его форматировать или нет?
-        let expected = habitCompletions.hasOwnProperty(today.toISOString()) 
+        let expected = habitCompletions[format(today, 'yyyy-MM-dd')]
             ? getInitialExpected(today, schedule) 
             : getPreviousScheduledDate(today, schedule)
         const dates = Object.keys(habitCompletions).sort((a, b) => b.localeCompare(a));
@@ -49,7 +49,7 @@ export const dates = {
 
     calculateStreak: (habitCompletions: HabitCompletions, schedule: Day [], today: Date): number => {
         //проверяем наличие today в complited, если есть то начинаем проверку с сегодня, если нету то пропускаем потому что день еще не закончился
-        let expected = habitCompletions.hasOwnProperty(today.toISOString()) 
+        let expected = habitCompletions.hasOwnProperty(format(today, 'yyyy-MM-dd')) // исправил формат времени
             ? getInitialExpected(today, schedule) 
             : getPreviousScheduledDate(today, schedule)
         let streak = 0;

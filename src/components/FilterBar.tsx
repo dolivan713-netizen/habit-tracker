@@ -26,7 +26,6 @@ export default function FillterBar() {
     const {onlyDueToday, hideCompletedToday, sortBy} = useUiSlice(state => state.filter);
     const toggleFilter = useUiSlice(state => state.toggleFilter);
     const toggleSort = useUiSlice(state => state.toggleSort);
-    //console.log(onlyDueToday);
     
     return(
         /* Navbar */

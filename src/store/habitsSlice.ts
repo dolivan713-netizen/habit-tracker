@@ -3,7 +3,7 @@
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand";
 import { persist } from 'zustand/middleware'
-import type { HabitsSlice } from "../types";
+import type { HabitsSlice, Habit } from "../types";
 
 export const useHabitSlice = create(
     persist(
@@ -24,10 +24,9 @@ export const useHabitSlice = create(
                 state.completions[habit.id] = {} //при первом дабавлении
             }),
             deleteHabit: (habitId: string) => set((state) => {
-                state.habits = state.habits.filter(habit => habit.id !== habitId);
+                state.habits = state.habits.filter((habit: Habit) => habit.id !== habitId);
                 delete state.completions[habitId]
             }),
-            // теперь нужно написать отдельно функцию для отметки что выполнил. также нужно написать функуию для отмены
             // если привычку отметили как выполнено и решили отменить
             doneDay: (habitId: string, date: string) => set((state) => { // нет проверки, что date соответствует schedule
                 const completions = state.completions[habitId]
