@@ -1,9 +1,11 @@
 import type { Day } from "date-fns";
 
 export type HabitCompletions = Record<string, true>;
-export type Completions = Record<string, HabitCompletions> // храним только успешные дни 
 
-export type SortBy = 'streak' | 'name' | 'createdAt'
+export type Completions = Record<string, HabitCompletions>;
+
+export type SortBy = 'streak' | 'name' | 'createdAt';
+
 export type FilterBy = 'onlyDueToday' | 'hideCompletedToday';
 
 export type DateNow = { 
@@ -36,7 +38,7 @@ export type HabitsSlice = {
     completions: Completions
     addHabit: (newHabit: NewHabit) => void
     deleteHabit: (habitId: string) => void
-    doneDay: (habitId: string, date: string) => void // здесь не уверен в типе но принимать будет completions['habit']["2026-05-13"]
+    doneDay: (habitId: string, date: string) => void
     cancelDoneHabit: (habitId: string, date: string) => void
 }
 
@@ -55,4 +57,5 @@ export type PropsDayCell = {
     state: PropState
     click?: () => void
 }
+
 export type PropState = "disabled" | "completed" | "active" | "failed";

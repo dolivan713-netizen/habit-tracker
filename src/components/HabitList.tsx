@@ -1,14 +1,15 @@
-import { Stack, Text, Center } from "@mantine/core";
+import { Stack, Text, Center} from "@mantine/core";
 import { useHabitSlice } from "../store/habitsSlice";
 import useFilteredHabits from "../hooks/useFilteredHabits";
 import { useUiSlice } from "../store/uiSlice";
 import HabitRow from "./HabitRow";
+import useToday from "../hooks/useToday";
 
 export default function HabitList() {
     const completed = useHabitSlice(state => state.completions);
     const habits = useHabitSlice(state => state.habits);
     const filters = useUiSlice(state => state.filter);
-    const today = new Date();
+    const today = useToday();
     const sortedHabit = useFilteredHabits({completed, habits, filters, today});
     
     
@@ -24,6 +25,8 @@ export default function HabitList() {
             <Stack gap="md">
                 {sortedHabit.map(habit => (
                     <HabitRow
+                        key={habit.id}
+                        today={today}
                         complitedHabits={completed[habit.id]}
                         habit={habit}
                     />

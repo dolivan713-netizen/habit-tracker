@@ -1,5 +1,3 @@
-// habitsSlice — реальные данные (то что важно сохранить навсегда):
-
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand";
 import { persist } from 'zustand/middleware'
@@ -8,8 +6,9 @@ import type { HabitsSlice, Habit } from "../types";
 export const useHabitSlice = create(
     persist(
         immer<HabitsSlice>((set) => ({
-            habits: [], 
+            habits: [],
             completions: {},
+
             addHabit: (newHabit) => set((state) => {
                 const today = new Date().toISOString().split('T')[0];
 
@@ -17,25 +16,29 @@ export const useHabitSlice = create(
                     id: crypto.randomUUID(),
                     name: newHabit.name,
                     color: newHabit.color,
-                    createdAt: today, // понять какой формат хранить ISO возможно
+                    createdAt: today, 
                     frequency: newHabit.frequency,
                 }
-                state.habits.push(habit) 
-                state.completions[habit.id] = {} //при первом дабавлении
+
+                state.habits.push(habit);
+                state.completions[habit.id] = {};
             }),
+
             deleteHabit: (habitId: string) => set((state) => {
                 state.habits = state.habits.filter((habit: Habit) => habit.id !== habitId);
-                delete state.completions[habitId]
+                delete state.completions[habitId];
             }),
-            // если привычку отметили как выполнено и решили отменить
-            doneDay: (habitId: string, date: string) => set((state) => { // нет проверки, что date соответствует schedule
+
+            
+            doneDay: (habitId: string, date: string) => set((state) => {
                 const completions = state.completions[habitId]
+
                 if(!completions) return;
+
                 state.completions[habitId][date] = true;
             }),
-            cancelDoneHabit: (habitId: string, date: string) => set((state) => { //отмена выполнения дня
-                // const completions = state.completions[habitId];
-                // if(!completions) return;
+
+            cancelDoneHabit: (habitId: string, date: string) => set((state) => {
                 delete state.completions[habitId][date];
             })
         })),
@@ -43,10 +46,6 @@ export const useHabitSlice = create(
         {name: 'habit-Slice'}
     )
 )
-
-// completions = {
-//   "habit-1": { "2026-05-13": true, "2026-05-12": false },
-//   "habit-2": { "2
 
 
 
