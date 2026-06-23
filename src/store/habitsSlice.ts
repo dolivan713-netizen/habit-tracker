@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { persist } from 'zustand/middleware'
 import type { HabitsSlice, Habit } from "../types";
 
+
 export const useHabitSlice = create(
     persist(
         immer<HabitsSlice>((set) => ({
@@ -24,12 +25,16 @@ export const useHabitSlice = create(
                 state.completions[habit.id] = {};
             }),
 
+            editHabit: (habitId: string, reName: string) => set((state) => {
+                const habit = state.habits.find(habit => habit.id === habitId);
+                if (habit) habit.name = reName;
+            }),
+
             deleteHabit: (habitId: string) => set((state) => {
                 state.habits = state.habits.filter((habit: Habit) => habit.id !== habitId);
                 delete state.completions[habitId];
             }),
 
-            
             doneDay: (habitId: string, date: string) => set((state) => {
                 const completions = state.completions[habitId]
 

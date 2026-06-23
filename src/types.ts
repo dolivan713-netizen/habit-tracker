@@ -8,11 +8,6 @@ export type SortBy = 'streak' | 'name' | 'createdAt';
 
 export type FilterBy = 'onlyDueToday' | 'hideCompletedToday';
 
-export type DateNow = { 
-    year: number,
-    month: number // 1 - 12
-}
-
 export type Habit = {
     id: string
     name: string
@@ -37,6 +32,7 @@ export type HabitsSlice = {
     habits: Habit[]
     completions: Completions
     addHabit: (newHabit: NewHabit) => void
+    editHabit: (habitId: string, reName: string) => void
     deleteHabit: (habitId: string) => void
     doneDay: (habitId: string, date: string) => void
     cancelDoneHabit: (habitId: string, date: string) => void
@@ -44,10 +40,8 @@ export type HabitsSlice = {
 
 export type UiSlice = {
     habitNow: string
-    dateNow: DateNow
     filter: Filters
     toggleHabit: (habit: string) => void
-    toggleDate: (date: DateNow) => void
     toggleFilter: (filter: FilterBy) => void
     toggleSort: (sort: SortBy) => void
 }

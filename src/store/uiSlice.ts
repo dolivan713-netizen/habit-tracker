@@ -6,17 +6,12 @@
 
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand";
-import type { UiSlice, DateNow, SortBy, FilterBy} from "../types";
+import type { UiSlice, SortBy, FilterBy} from "../types";
 
 
 export const useUiSlice = create(
     immer<UiSlice>((set) => ({
         habitNow: '',
-
-        dateNow: {
-            year: new Date().getFullYear(),
-            month: new Date().getMonth() + 1,
-        },
 
         filter: {
             onlyDueToday: false,
@@ -29,9 +24,7 @@ export const useUiSlice = create(
             if (habitId === state.habitNow) return;
             state.habitNow = habitId 
         }),
-        toggleDate: (date: DateNow) => set((state) => {
-            state.dateNow = date
-        }),
+    
         toggleFilter: (filterName: FilterBy) => set((state) => {
             state.filter[filterName] = !state.filter[filterName]
         }),
@@ -40,8 +33,3 @@ export const useUiSlice = create(
         }),
     })),
 )
-
-// deleteHabit: (habitId: string) => set((state) => {
-//             state.habits = state.habits.filter(habit => habit.id !== habitId);
-//             delete state.completions[habitId]
-//         }),
