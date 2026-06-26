@@ -17,17 +17,15 @@ type Props = {
 export default function HabitRow({today, complitedHabits, habit}: Props, ) {
     const [isEditing, setEditing] = useState(false);
     const todayIso = parseISO(today);
-
-    let createdAt = habit.createdAt;
-
-    
     const start = subDays(todayIso, 6); //Генерируем массив от "6 дней назад" до "сегодня"
     const daysOfWeek = eachDayOfInterval({ start, end: todayIso });
+    
+    const cellDays = useDayCellAction({daysOfWeek, id: habit.id, createdAt: habit.createdAt, frequency: habit.frequency, today, complitedHabits});
 
     const deleteHabit = useHabitSlice(state => state.deleteHabit);
     const streak = dates.calculateStreak;
 
-    function handleEditig() {
+    function handleEditing() {
         setEditing(false);
     }
 
@@ -39,14 +37,14 @@ export default function HabitRow({today, complitedHabits, habit}: Props, ) {
                 editing={isEditing}
                 id={habit.id}
                 name={habit.name}
-                onEditing={handleEditig}
+                onEditing={handleEditing}
 
             />
 
             <Text>{streak(complitedHabits, habit.frequency, today)}</Text>
 
-            {daysOfWeek.map(day => {
-                const {stateProp, fnProp} = useDayCellAction({day, createdAt, today, complitedHabits})
+            {cellDays.map(cellDay => {
+                const { stateProp, fnProp, day} = cellDay;
                 
                 return (
                     <DayCell

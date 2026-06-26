@@ -3,7 +3,7 @@ import { useHabitSlice } from "../store/habitsSlice";
 import { Text, TextInput } from "@mantine/core";
 
 type Props = {
-    editing: true
+    editing: boolean
     id: string
     name:string
     onEditing: () => void
