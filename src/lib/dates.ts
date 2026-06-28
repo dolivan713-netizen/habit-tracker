@@ -1,13 +1,3 @@
-
-// Тесты написать:
-
-// 0 completions → streak 0
-// 1 completion на сегодня → streak 1
-// 5 дней подряд, сегодня в расписании, сегодня отмечен → streak 5
-// 5 дней подряд, сегодня в расписании, сегодня НЕ отмечен → streak 5 (льгота)
-// 5 дней подряд, потом провал, потом 3 → best 5, current 3
-
-
 import { previousDay, max, isSameDay, parseISO} from 'date-fns';
 import type { HabitCompletions } from "../types";
 import type { Day } from 'date-fns';

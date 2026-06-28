@@ -37,8 +37,7 @@ export default function useFilteredHabits({completed, habits, filters, today}: P
         switch (sortBy) {
             case "streak":
                 sortedHabit.sort((a, b) => 
-                    streak(completed[b.id] ?? {}, b.frequency, today) - streak(completed[a.id] ?? {}, a.frequency, today)
-            )
+                    streak(completed[b.id] ?? {}, b.frequency, today) - streak(completed[a.id] ?? {}, a.frequency, today))
                 break;
             case "name":
                 sortedHabit.sort((a, b) => a.name.localeCompare(b.name))
