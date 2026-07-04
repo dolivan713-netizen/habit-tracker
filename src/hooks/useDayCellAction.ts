@@ -1,5 +1,5 @@
 import { isBefore, isSameDay, startOfDay, format, parseISO } from 'date-fns';
-import type { PropState, HabitCompletions } from '../types';
+import type { PropState, HabitCompleted } from '../types';
 import type { Day } from "date-fns";
 import { dates } from '../lib/dates';
 import { useHabitSlice } from '../store/habitsSlice';
@@ -10,7 +10,7 @@ type Props = {
     createdAt: string
     frequency: Day[]
     today: string
-    complitedHabits: HabitCompletions
+    complitedHabits: HabitCompleted
 
 }
 

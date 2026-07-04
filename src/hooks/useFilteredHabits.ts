@@ -1,10 +1,10 @@
-import type { Completions, Filters, Habit } from "../types"
+import type { Completed, Filters, Habit } from "../types"
 import { useMemo } from "react"
 import { parseISO } from "date-fns";
 import { dates } from "../lib/dates";
 
 type Props = {
-    completed: Completions
+    completed: Completed
     habits: Habit[]
     filters: Filters
     today: string

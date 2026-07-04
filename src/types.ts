@@ -1,12 +1,15 @@
 import type { Day } from "date-fns";
+import type { ImportHabits } from "./lib/io";
 
-export type HabitCompletions = Record<string, true>;
+export type HabitCompleted = Record<string, true>;
 
-export type Completions = Record<string, HabitCompletions>;
+export type Completed = Record<string, HabitCompleted>;
 
 export type SortBy = 'streak' | 'name' | 'createdAt';
 
 export type FilterBy = 'onlyDueToday' | 'hideCompletedToday';
+
+export type ImportData = {habits: ImportHabits, completed: Completed}
 
 export type Habit = {
     id: string
@@ -30,10 +33,11 @@ export type Filters = {
 
 export type HabitsSlice = {
     habits: Habit[]
-    completions: Completions
+    completed: Completed
     addHabit: (newHabit: NewHabit) => void
     editHabit: (habitId: string, reName: string) => void
     deleteHabit: (habitId: string) => void
+    importHabits: (importData: ImportData) => void
     doneDay: (habitId: string, date: string) => void
     cancelDoneHabit: (habitId: string, date: string) => void
 }

@@ -1,17 +1,65 @@
 import { useUiSlice } from "../store/uiSlice";
 import { useHabitSlice } from "../store/habitsSlice";
-import { Group, Title, Select, Switch } from "@mantine/core";
+import { io } from "../lib/io";
+import { notifications } from '@mantine/notifications';
+import { Group, Title, Select, Switch, Button, FileButton } from "@mantine/core";
+
 
 export default function FillterBar() {
     const habits = useHabitSlice(state => state.habits);
+
+    const exportState = io.exportState;
+    const importState = io.importState;
+
     const {onlyDueToday, hideCompletedToday, sortBy} = useUiSlice(state => state.filter);
+
     const toggleFilter = useUiSlice(state => state.toggleFilter);
     const toggleSort = useUiSlice(state => state.toggleSort);
+    const importData =  useHabitSlice(state => state.importHabits);
+
+    function exportClick() {
+        const {habits, completed} = useHabitSlice.getState();
+        const data = exportState(habits, completed);
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "habits.json";
+        a.click(); 
+        URL.revokeObjectURL(url)
+    }
+
+    async function handleImport(file: File | null) {
+        if(!file) return;
+        
+        const raw = await file.text();
+        const result = importState(raw);
+
+        if(result.ok) {
+            return importData(result.data);
+        }
+        
+        notifications.show({
+            title: 'Ошибка импорта',
+            message: result.error,
+            color: 'red',
+        });
+    }
     
     return(
         /* Navbar */
         <Group justify="space-between" p="md">
-            <Title order={2}>{`Habit tracker ${habits.length}`}</Title>
+            <Group justify="space-between">
+                <Title order={2}>{`Habit tracker ${habits.length}`}</Title>
+
+                <Button onClick={() => exportClick()}>Экспорт</Button>
+
+                <FileButton onChange={handleImport} accept="application/json">
+                    {(props) => <Button {...props}>Импорт</Button>}
+                </FileButton>
+            </Group>
+            
             <Group>
                 <Switch 
                     label="Только активные сегодня" 
@@ -41,10 +89,3 @@ export default function FillterBar() {
 }
 
 
-//export type FilterBy = 'onlyDueToday' | 'hideCompletedToday';
-
-
-{/* <Select
-  label="Выбери"
-  data={['React', 'Vue', 'Svelte']}
-/> */}

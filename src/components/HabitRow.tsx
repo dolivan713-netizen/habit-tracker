@@ -3,14 +3,14 @@ import DayCell from "./DayCell";
 import EditingTitle from "./EditingTitle";
 import { Group, Button, Text } from "@mantine/core";
 import { subDays, eachDayOfInterval, format, parseISO } from 'date-fns';
-import type { HabitCompletions, Habit} from "../types";
+import type { HabitCompleted, Habit} from "../types";
 import { dates } from "../lib/dates";
 import { useState } from "react";
 import useDayCellAction from "../hooks/useDayCellAction";
 
 type Props = {
     today: string
-    complitedHabits: HabitCompletions
+    complitedHabits: HabitCompleted
     habit: Habit
 }
 

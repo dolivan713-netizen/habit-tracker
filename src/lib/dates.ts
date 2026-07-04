@@ -1,5 +1,5 @@
 import { previousDay, max, isSameDay, parseISO} from 'date-fns';
-import type { HabitCompletions } from "../types";
+import type { HabitCompleted } from "../types";
 import type { Day } from 'date-fns';
 
 const getPreviousScheduledDate = (date: Date, schedule: Day[]) => max(schedule.map((day: Day) => previousDay(date, day)));
@@ -15,16 +15,16 @@ export const dates = {
        return schedule.includes(date.getDay() as Day)
     },
 
-    calculateBestStreak: (habitCompletions: HabitCompletions, schedule: Day [], today: string): number => {
+    calculateBestStreak: (habitCompleted: HabitCompleted, schedule: Day [], today: string): number => {
         const todayIso = parseISO(today);
         let maxStreak = 0;
         let streak = 0;
         
-        let expected = habitCompletions[today]
+        let expected = habitCompleted[today]
             ? getInitialExpected(todayIso, schedule) 
             : getPreviousScheduledDate(todayIso, schedule)
 
-        const dates = Object.keys(habitCompletions).sort((a, b) => b.localeCompare(a));
+        const dates = Object.keys(habitCompleted).sort((a, b) => b.localeCompare(a));
 
         dates.forEach(date => {
             const noteDate = parseISO(date); // из строки в формат даты
@@ -42,7 +42,7 @@ export const dates = {
         return maxStreak;
     },
 
-    calculateStreak: (habitCompletions: HabitCompletions, schedule: Day [], today: string): number => {
+    calculateStreak: (habitCompletions: HabitCompleted, schedule: Day [], today: string): number => {
         const todayIso = parseISO(today);
         //проверяем наличие today в complited, если есть то начинаем проверку с сегодня, если нету то пропускаем потому что день еще не закончился
         let expected = habitCompletions[today]

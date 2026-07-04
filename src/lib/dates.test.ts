@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { dates } from './dates'
 import type { Day } from 'date-fns';
-import type { HabitCompletions } from '../types';
+import type { HabitCompleted } from '../types';
 
 
 
@@ -19,7 +19,7 @@ describe('calculateStreak', () => {
   })
 
   it('5 дней подряд, сегодня в расписании, сегодня отмечен', () => {
-    const fiveDays: HabitCompletions = {
+    const fiveDays: HabitCompleted = {
         '2026-06-24': true, 
         '2026-06-26': true, 
         '2026-06-25': true, 
@@ -30,7 +30,7 @@ describe('calculateStreak', () => {
   })
 
   it('5 дней подряд, сегодня в расписании, сегодня НЕ отмечен → streak 5 (льгота)', () => {
-    const fiveDaysToday: HabitCompletions = {
+    const fiveDaysToday: HabitCompleted = {
         '2026-06-23': true, 
         '2026-06-24': true, 
         '2026-06-25': true, 
@@ -41,7 +41,7 @@ describe('calculateStreak', () => {
   })
 
   it('5 дней подряд, потом провал, потом 3 → best 5', () => {
-    const date: HabitCompletions = {
+    const date: HabitCompleted = {
         '2026-06-19': true, 
         '2026-06-20': true, 
         '2026-06-21': true, 
@@ -55,7 +55,7 @@ describe('calculateStreak', () => {
   })
 
   it('5 дней подряд, потом провал, потом 3 → current 3', () => {
-    const date: HabitCompletions = {
+    const date: HabitCompleted = {
         '2026-06-19': true, 
         '2026-06-20': true, 
         '2026-06-21': true, 
@@ -70,7 +70,7 @@ describe('calculateStreak', () => {
 
   it('сегодня есть в кастомном расписании + пропуск дня-> current 2', () => {
     const schedule: Day[] = [1, 3, 0]; // Пн/Ср/Вс
-    const completions: HabitCompletions = {
+    const completions: HabitCompleted = {
         '2026-06-14': true,
         '2026-06-15': true, 
         '2026-06-17': true, 
@@ -82,7 +82,7 @@ describe('calculateStreak', () => {
 
   it('сегодня есть в кастомном расписании + пропуск дня-> best 3', () => {
     const schedule: Day[] = [1, 3, 0]; // Пн/Ср/Вс
-    const completions: HabitCompletions = {
+    const completions: HabitCompleted = {
         '2026-06-14': true,
         '2026-06-15': true, 
         '2026-06-17': true, 

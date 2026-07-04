@@ -1,14 +1,14 @@
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand";
 import { persist } from 'zustand/middleware'
-import type { HabitsSlice, Habit } from "../types";
+import type { HabitsSlice, Habit, ImportData } from "../types";
 
 
 export const useHabitSlice = create(
     persist(
         immer<HabitsSlice>((set) => ({
             habits: [],
-            completions: {},
+            completed: {},
 
             addHabit: (newHabit) => set((state) => {
                 const today = new Date().toISOString().split('T')[0];
@@ -22,7 +22,7 @@ export const useHabitSlice = create(
                 }
 
                 state.habits.push(habit);
-                state.completions[habit.id] = {};
+                state.completed[habit.id] = {};
             }),
 
             editHabit: (habitId: string, reName: string) => set((state) => {
@@ -32,19 +32,24 @@ export const useHabitSlice = create(
 
             deleteHabit: (habitId: string) => set((state) => {
                 state.habits = state.habits.filter((habit: Habit) => habit.id !== habitId);
-                delete state.completions[habitId];
+                delete state.completed[habitId];
+            }),
+
+            importHabits: (importData: ImportData) => set((state) => {
+                state.habits = importData.habits;
+                state.completed = importData.completed;
             }),
 
             doneDay: (habitId: string, date: string) => set((state) => {
-                const completions = state.completions[habitId]
+                const completed = state.completed[habitId]
 
-                if(!completions) return;
+                if(!completed) return;
 
-                state.completions[habitId][date] = true;
+                state.completed[habitId][date] = true;
             }),
 
             cancelDoneHabit: (habitId: string, date: string) => set((state) => {
-                delete state.completions[habitId][date];
+                delete state.completed[habitId][date];
             })
         })),
 
@@ -52,6 +57,10 @@ export const useHabitSlice = create(
     )
 )
 
-
+// getState: () => set((state) => {
+//                 const habits = state.habits;
+//                 const completed = state.completions;
+//                 return {habits, completed};
+//             })
 
     

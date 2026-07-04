@@ -6,7 +6,7 @@ import HabitRow from "./HabitRow";
 import useToday from "../hooks/useToday";
 
 export default function HabitList() {
-    const completed = useHabitSlice(state => state.completions);
+    const completed = useHabitSlice(state => state.completed);
     const habits = useHabitSlice(state => state.habits);
     const filters = useUiSlice(state => state.filter);
     const today = useToday();
