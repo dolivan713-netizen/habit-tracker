@@ -7,7 +7,7 @@ import type { NewHabit } from "../types";
 type Days = 'sunday' | 'monday'| 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
 
 export default function HabitForm() {
-    //const colors = ['red', 'blue', 'green', 'yellow']
+    
     const addHabit = useHabitSlice(state => state.addHabit);
     const [name, setName] = useState('');
     const [color, setColor] = useState(''); 
@@ -114,10 +114,12 @@ export default function HabitForm() {
             <Select 
                 label='Цвет'
                 data={[
-                    { value: 'red', label: 'Красный' },
-                    { value: 'blue', label: 'Синий' },
-                    { value: 'green', label: 'Зеленый' },
-                    { value: 'yellow', label: 'Желтый'}
+                    { value: "#F44336", label: 'Красный' },
+                    { value: "#2196F3", label: 'Синий' },
+                    { value: "#4CAF50", label: 'Зеленый' },
+                    { value: "#9C27B0", label: 'Фиолетовый'},
+                    { value: "#FF9800", label: 'Оранжевый'},
+                    { value: "#607D8B", label: 'Серо-синий'}
                 ]}
                 value={color}
                 onChange={(val) => {
@@ -134,13 +136,3 @@ export default function HabitForm() {
         </Stack>
     )
 }
-
-// week: {
-//             'понедельник': false,  
-//             tuesday: false,
-//             wednesday: false,
-//             thursday: false,
-//             friday: false,
-//             saturday: false,
-//             sunday: false
-//         }

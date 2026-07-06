@@ -56,11 +56,4 @@ export const useHabitSlice = create(
         {name: 'habit-Slice'}
     )
 )
-
-// getState: () => set((state) => {
-//                 const habits = state.habits;
-//                 const completed = state.completions;
-//                 return {habits, completed};
-//             })
-
     

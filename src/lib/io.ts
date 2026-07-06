@@ -1,8 +1,8 @@
 import z from "zod";
-import { parseISO, isFuture } from "date-fns";
+import { parseISO, isFuture, isValid } from "date-fns";
 import type { Habit, Completed } from "../types";
 
-type ResultImport = {ok: true, data: {habits: Habit[], completed: Completed }} | {ok: false, error: string};
+export type ResultImport = {ok: true, data: {habits: Habit[], completed: Completed }} | {ok: false, error: string};
 
 
 const HabitSchema = z.array(z.object({
@@ -10,6 +10,9 @@ const HabitSchema = z.array(z.object({
     name: z.string(),
     color: z.string(),
     createdAt: z.string().refine(
+        v => isValid(parseISO(v)),
+        "Некорректные данные в дате создания"
+    ).refine(
         v => !isFuture(parseISO(v)),
         "Дата создания не может быть в будущем"
     ),
@@ -18,7 +21,7 @@ const HabitSchema = z.array(z.object({
             z.literal(0), z.literal(1), z.literal(2), z.literal(3),
             z.literal(4), z.literal(5), z.literal(6),
         ])
-    )
+    ).min(1, "Нужен хотя бы один день")
 }));
 
 export type ImportHabits = z.infer<typeof HabitSchema>
@@ -48,7 +51,7 @@ export const io = {
         const schemeParse = ImportSchema.safeParse(parsed);
 
         if(!schemeParse.success) {
-            return {ok: false, error: 'Json не совпадает с типом'};
+            return {ok: false, error: schemeParse.error.issues[0].message};
         }
 
         const habitsId = new Set(schemeParse.data.habits.map((h) => h.id));
