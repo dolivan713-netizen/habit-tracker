@@ -27,7 +27,7 @@ export default function HabitList() {
                     <HabitRow
                         key={habit.id}
                         today={today}
-                        complitedHabits={completed[habit.id]}
+                        habitCompleted={completed[habit.id]}
                         habit={habit}
                     />
                 ))}

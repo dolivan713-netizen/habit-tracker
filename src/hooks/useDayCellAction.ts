@@ -10,7 +10,7 @@ type Props = {
     createdAt: string
     frequency: Day[]
     today: string
-    complitedHabits: HabitCompleted
+    habitCompleted: HabitCompleted
 
 }
 
@@ -18,7 +18,7 @@ type DayCell = { stateProp: PropState, fnProp: (() => void) | undefined, day: Da
 
 type Result = Array<DayCell>;
 
-export default function useDayCellAction({daysOfWeek, id, createdAt, today, frequency, complitedHabits}: Props): Result {
+export default function useDayCellAction({daysOfWeek, id, createdAt, today, frequency, habitCompleted}: Props): Result {
 
     const doneDay = useHabitSlice(state => state.doneDay);
     const cancelDoneHabit = useHabitSlice(state => state.cancelDoneHabit);
@@ -45,7 +45,7 @@ export default function useDayCellAction({daysOfWeek, id, createdAt, today, freq
             }
         }
         
-        if (complitedHabits[dayFormat] !== undefined) {
+        if (habitCompleted[dayFormat] !== undefined) {
             stateProp = 'completed';
             fnProp = () => cancelDoneHabit(id, dayFormat)
             return {

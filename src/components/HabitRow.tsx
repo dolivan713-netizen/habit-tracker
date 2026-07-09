@@ -10,20 +10,21 @@ import useDayCellAction from "../hooks/useDayCellAction";
 
 type Props = {
     today: string
-    complitedHabits: HabitCompleted
+    habitCompleted: HabitCompleted
     habit: Habit
 }
 
-export default function HabitRow({today, complitedHabits, habit}: Props, ) {
+export default function HabitRow({today, habitCompleted, habit}: Props, ) {
     const [isEditing, setEditing] = useState(false);
     const todayIso = parseISO(today);
     const start = subDays(todayIso, 6); //Генерируем массив от "6 дней назад" до "сегодня"
     const daysOfWeek = eachDayOfInterval({ start, end: todayIso });
     
-    const cellDays = useDayCellAction({daysOfWeek, id: habit.id, createdAt: habit.createdAt, frequency: habit.frequency, today, complitedHabits});
+    const cellDays = useDayCellAction({daysOfWeek, id: habit.id, createdAt: habit.createdAt, frequency: habit.frequency, today, habitCompleted});
 
     const deleteHabit = useHabitSlice(state => state.deleteHabit);
     const streak = dates.calculateStreak;
+    const rating = dates.calculateCompletionRate;
 
     function handleEditing() {
         setEditing(false);
@@ -40,8 +41,9 @@ export default function HabitRow({today, complitedHabits, habit}: Props, ) {
                 onEditing={handleEditing}
 
             />
-
-            <Text>{streak(complitedHabits, habit.frequency, today)}</Text>
+    
+            <Text>Подряд: {streak(habitCompleted, habit.frequency, today)}</Text>
+            <Text>30д: {rating(habitCompleted, habit.frequency, today)}%</Text>
 
             {cellDays.map(cellDay => {
                 const { stateProp, fnProp, day} = cellDay;
