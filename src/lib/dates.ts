@@ -1,6 +1,7 @@
-import { previousDay, max, isSameDay, parseISO} from 'date-fns';
+import { previousDay, max, isSameDay, parseISO, subDays, eachDayOfInterval, format} from 'date-fns';
 import type { HabitCompleted } from "../types";
 import type { Day } from 'date-fns';
+
 
 const getPreviousScheduledDate = (date: Date, schedule: Day[]) => max(schedule.map((day: Day) => previousDay(date, day)));
 const getInitialExpected = (today: Date, schedule: Day[]): Date => {
@@ -42,16 +43,16 @@ export const dates = {
         return maxStreak;
     },
 
-    calculateStreak: (habitCompletions: HabitCompleted, schedule: Day [], today: string): number => {
+    calculateStreak: (habitCompleted: HabitCompleted, schedule: Day [], today: string): number => {
         const todayIso = parseISO(today);
         //проверяем наличие today в complited, если есть то начинаем проверку с сегодня, если нету то пропускаем потому что день еще не закончился
-        let expected = habitCompletions[today]
+        let expected = habitCompleted[today]
             ? getInitialExpected(todayIso, schedule) 
             : getPreviousScheduledDate(todayIso, schedule)
         
         let streak = 0;
 
-        const dates = Object.keys(habitCompletions).sort((a, b) => b.localeCompare(a));
+        const dates = Object.keys(habitCompleted).sort((a, b) => b.localeCompare(a));
 
         for (const date of dates) {
             const noteDate = parseISO(date);
@@ -62,11 +63,26 @@ export const dates = {
             streak++
         }
         return streak;
-    }
+    },
 
-    // calculateCompletionRate: (completions, habit, days) => {
+    calculateCompletionRate: (habitCompleted: HabitCompleted, schedule: Day [], today: string): number => {
+        let doneDays = 0;
+        const todayIso = parseISO(today);
 
-    // },
+        const days = eachDayOfInterval({
+            start: subDays(todayIso, 29), // Date — 30 дней назад от сейчас
+            end: todayIso
+        });
+        
+        const allDays = days.filter(day => dates.isScheduledOn(schedule, day)); // отфильтровали по частоте
+        
+        allDays.forEach(day => {
+            const toIso = format(day, "yyyy-MM-dd");
+            if (habitCompleted[toIso]) doneDays++
+        })
+
+        return Math.round((doneDays / allDays.length) * 100)
+    },
 }
 
 
