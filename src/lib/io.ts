@@ -1,5 +1,5 @@
 import z from "zod";
-import { parseISO, isFuture, isValid } from "date-fns";
+import { parseISO, isFuture} from "date-fns";
 import type { Habit, Completed } from "../types";
 
 export type ResultImport = {ok: true, data: {habits: Habit[], completed: Completed }} | {ok: false, error: string};
@@ -9,10 +9,7 @@ const HabitSchema = z.array(z.object({
     id: z.string(),
     name: z.string(),
     color: z.string(),
-    createdAt: z.string().refine(
-        v => isValid(parseISO(v)),
-        "Некорректные данные в дате создания"
-    ).refine(
+    createdAt: z.string().date("createdAt неверный формат даты").refine(
         v => !isFuture(parseISO(v)),
         "Дата создания не может быть в будущем"
     ),
@@ -26,7 +23,14 @@ const HabitSchema = z.array(z.object({
 
 export type ImportHabits = z.infer<typeof HabitSchema>
 
-const CompletedSchema = z.record(z.string(), z.record(z.string(), z.literal(true))) 
+const CompletedSchema = z.record(
+    z.string(), 
+    z.record(z.string().date(), z.literal(true), {
+        error: (iss) => iss.code === 'invalid_key'
+            ? 'В completed ключи должны быть датами yyyy-mm-dd'
+            : undefined
+    }) // date() проверка на yyyy-mm-dd
+) 
 
 const ImportSchema = z.object({
     habits: HabitSchema,

@@ -45,7 +45,7 @@ describe('import', () => {
     }]
     const completedCreateAt = {'a1b2c3': {}};
     const jsonCreateAt = JSON.stringify({habits: validCreateAt, completed: completedCreateAt})
-    expect(importTest(jsonCreateAt)).toEqual({ok: false, error: "Некорректные данные в дате создания"})
+    expect(importTest(jsonCreateAt)).toEqual({ok: false, error: "createdAt неверный формат даты"})
   })
 
   it('дата создания в будущем', () => {
@@ -73,5 +73,12 @@ describe('import', () => {
   it('битый JSON', () => {
     const brokenJson = '{ "habits": [}'; 
     expect(importTest(brokenJson)).toEqual({ok: false, error: 'битый JSON'})
+  })
+
+  it('проверка на формат yyyy-mm-dd в completed', () => {
+    const habits = [{ id: 'x111', name: "Q", color: "#000000", createdAt: "2026-01-03", frequency: [0, 1, 2, 3, 4, 5, 6] }];
+    const completedFormat = {'x111': {'2026.01.04': true}};
+    const jsonFormat = JSON.stringify({habits, completed: completedFormat});
+    expect(importTest(jsonFormat)).toEqual({ok: false, error: 'В completed ключи должны быть датами yyyy-mm-dd'})
   })
 })
