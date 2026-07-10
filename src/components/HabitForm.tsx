@@ -1,10 +1,29 @@
 import { useHabitSlice } from "../store/habitsSlice";
-import { Stack, TextInput, Button, Switch, Select, Text } from "@mantine/core";
+import { Stack, TextInput, Button, Switch, Text, Group, ColorSwatch, Paper } from "@mantine/core";
 import { useState } from "react";
 import type { Day } from "date-fns";
 import type { NewHabit } from "../types";
 
 type Days = 'sunday' | 'monday'| 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
+
+const COLORS = [
+    { value: "#F44336", label: 'Красный' },
+    { value: "#2196F3", label: 'Синий' },
+    { value: "#4CAF50", label: 'Зелёный' },
+    { value: "#9C27B0", label: 'Фиолетовый' },
+    { value: "#FF9800", label: 'Оранжевый' },
+    { value: "#607D8B", label: 'Серо-синий' },
+];
+
+const DAY_LABELS: Record<Days, string> = {
+    monday: 'Пн',
+    tuesday: 'Вт',
+    wednesday: 'Ср',
+    thursday: 'Чт',
+    friday: 'Пт',
+    saturday: 'Сб',
+    sunday: 'Вс',
+};
 
 export default function HabitForm() {
     
@@ -82,57 +101,75 @@ export default function HabitForm() {
     }
 
     return (
-        <Stack gap="md">
+        <Paper withBorder p="md">
+            <Stack gap="md">
 
-            <TextInput 
-                label="Название"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-            />
+                <Group gap="lg" align="flex-end">
+                    <TextInput
+                        label="Название"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        style={{ flex: 1 }}
+                    />
 
-            <Switch
-                label="Каждый день"
-                checked={period.everyDay}
-                onChange={() => setPeriod(prev => ({...prev, everyDay: !prev.everyDay, onWeekDays: false}))}// почему так??
-            />
+                    <Stack gap={6}>
+                        <Text size="sm" fw={500}>Цвет</Text>
+                        <Group gap="xs">
+                            {COLORS.map(({ value, label }) => (
+                                <ColorSwatch
+                                    key={value}
+                                    component="button"
+                                    type="button"
+                                    title={label}
+                                    aria-label={label}
+                                    onClick={() => setColor(value)}
+                                    color={value}
+                                    size={28}
+                                    radius="xl"
+                                    withShadow={false}
+                                    style={{
+                                        cursor: 'pointer',
+                                        outline: value === color ? '2px solid var(--mantine-color-blue-5)' : undefined,
+                                        outlineOffset: '2px',
+                                    }}
+                                />
+                            ))}
+                        </Group>
+                    </Stack>
+                </Group>
 
-            <Switch
-                label="По будням"
-                checked={period.onWeekDays}
-                onChange={() => setPeriod(prev => ({...prev, onWeekDays: !prev.onWeekDays, everyDay: false}))}
-            />
+                <Stack gap={6}>
+                    <Text size="sm" fw={500}>Период</Text>
+                    <Group gap="md">
+                        <Switch
+                            label="Каждый день"
+                            checked={period.everyDay}
+                            onChange={() => setPeriod(prev => ({...prev, everyDay: !prev.everyDay, onWeekDays: false}))} 
+                        />
 
-            {daysOfWeek.map((day: Days) => (
-                <Switch
-                    key={day}
-                    label={day}
-                    checked={period.week[day]}
-                    onChange={() => handleAddHabit(day)}
-                />
-            ))}
-        
-            <Select 
-                label='Цвет'
-                data={[
-                    { value: "#F44336", label: 'Красный' },
-                    { value: "#2196F3", label: 'Синий' },
-                    { value: "#4CAF50", label: 'Зеленый' },
-                    { value: "#9C27B0", label: 'Фиолетовый'},
-                    { value: "#FF9800", label: 'Оранжевый'},
-                    { value: "#607D8B", label: 'Серо-синий'}
-                ]}
-                value={color}
-                onChange={(val) => {
-                    if (val) setColor(val)
-                }}
-            />
+                        <Switch
+                            label="По будням"
+                            checked={period.onWeekDays}
+                            onChange={() => setPeriod(prev => ({...prev, onWeekDays: !prev.onWeekDays, everyDay: false}))}
+                        />
 
-            {error && (<Text color="red" size="md">{error}</Text>)}
+                        {daysOfWeek.map((day: Days) => (
+                            <Switch
+                                key={day}
+                                label={DAY_LABELS[day]}
+                                checked={period.week[day]}
+                                onChange={() => handleAddHabit(day)}
+                            />
+                        ))}
+                    </Group>
+                </Stack>
 
-            <Button 
-                onClick={() => addHabitCheck()}
-            >Добавить привычку
-            </Button>
-        </Stack>
+                <Group gap="md">
+                    <Button onClick={() => addHabitCheck()}>Добавить привычку</Button>
+                    {error && (<Text c="red" size="sm">{error}</Text>)}
+                </Group>
+
+            </Stack>
+        </Paper>
     )
 }

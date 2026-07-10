@@ -12,14 +12,14 @@ export default function DayCell({date, state, click}: PropsDayCell) {
     };
     
     return (
-        <ActionIcon
-      variant={state === 'completed' ? 'filled' : 'light'}
-      color={getColor()}
-      disabled={state === 'disabled' || !click}
-      onClick={click}
-      size="lg"
-      radius="md"
-    >
+      <ActionIcon
+        variant={state === 'completed' ? 'filled' : 'light'}
+        color={getColor()}
+        disabled={state === 'disabled' || !click}
+        onClick={click}
+        size="lg"
+        radius="md"
+      >
       <Text size="xs">{date.getDate()}</Text>
     </ActionIcon>
     )

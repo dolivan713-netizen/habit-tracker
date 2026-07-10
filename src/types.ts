@@ -43,9 +43,7 @@ export type HabitsSlice = {
 }
 
 export type UiSlice = {
-    habitNow: string
     filter: Filters
-    toggleHabit: (habit: string) => void
     toggleFilter: (filter: FilterBy) => void
     toggleSort: (sort: SortBy) => void
 }

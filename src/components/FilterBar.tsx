@@ -5,7 +5,7 @@ import { notifications } from '@mantine/notifications';
 import { Group, Title, Select, Switch, Button, FileButton } from "@mantine/core";
 
 
-export default function FillterBar() {
+export default function FilterBar() {
     const habits = useHabitSlice(state => state.habits);
 
     const exportState = io.exportState;
@@ -49,9 +49,9 @@ export default function FillterBar() {
     
     return(
         /* Navbar */
-        <Group justify="space-between" p="md">
-            <Group justify="space-between">
-                <Title order={2}>{`Habit tracker ${habits.length}`}</Title>
+        <Group justify="space-between" align="flex-end">
+            <Group>
+                <Title order={2}>{`Habit tracker (${habits.length})`}</Title>
 
                 <Button onClick={() => exportClick()}>Экспорт</Button>
 

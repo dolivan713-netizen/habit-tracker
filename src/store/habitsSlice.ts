@@ -1,6 +1,7 @@
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand";
 import { persist } from 'zustand/middleware'
+import { format } from "date-fns";
 import type { HabitsSlice, Habit, ImportData } from "../types";
 
 
@@ -11,13 +12,13 @@ export const useHabitSlice = create(
             completed: {},
 
             addHabit: (newHabit) => set((state) => {
-                const today = new Date().toISOString().split('T')[0];
-
+                //const today = new Date().toISOString().split('T')[0];
+                const todayIso = format(new Date(), 'yyyy-MM-dd')
                 const habit = {
                     id: crypto.randomUUID(),
                     name: newHabit.name,
                     color: newHabit.color,
-                    createdAt: today, 
+                    createdAt: todayIso, 
                     frequency: newHabit.frequency,
                 }
 
