@@ -84,10 +84,3 @@ export const dates = {
         return Math.round((doneDays / allDays.length) * 100)
     },
 }
-
-
-
-
-
-
-

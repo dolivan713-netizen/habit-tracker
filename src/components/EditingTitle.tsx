@@ -37,7 +37,6 @@ export default function EditingTitle({editing, id, name, onEditing}: Props) {
         if (value.trim()) editHabit(id, value.trim());
         onEditing();
         setValue('');
-
     }
 
     return (

@@ -12,7 +12,6 @@ export const useHabitSlice = create(
             completed: {},
 
             addHabit: (newHabit) => set((state) => {
-                //const today = new Date().toISOString().split('T')[0];
                 const todayIso = format(new Date(), 'yyyy-MM-dd')
                 const habit = {
                     id: crypto.randomUUID(),

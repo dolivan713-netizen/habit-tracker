@@ -12,7 +12,6 @@ export default function HabitList() {
     const today = useToday();
     const sortedHabit = useFilteredHabits({completed, habits, filters, today});
     
-    
     return (
         <>
             {sortedHabit.length === 0 && (
