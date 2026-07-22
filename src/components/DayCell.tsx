@@ -3,12 +3,12 @@ import type { PropsDayCell } from "../types";
 
 export default function DayCell({date, state, click}: PropsDayCell) {
     const getColor = () => {
-        switch (state) {
-        case 'completed': return 'green';
-        case 'failed': return 'red';
-        case 'active': return 'blue'; // сегодняшний активный день
-        default: return 'gray'; // задизейбленный день (будущее)
-        }
+      switch (state) {
+      case 'completed': return 'green';
+      case 'failed': return 'red';
+      case 'active': return 'blue'; // сегодняшний активный день
+      default: return 'gray'; // задизейбленный день (будущее)
+      }
     };
     
     return (

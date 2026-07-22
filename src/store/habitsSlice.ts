@@ -41,7 +41,7 @@ export const useHabitSlice = create(
             }),
 
             doneDay: (habitId: string, date: string) => set((state) => {
-                const completed = state.completed[habitId]
+                const completed = state.completed[habitId];
 
                 if(!completed) return;
 
@@ -49,6 +49,10 @@ export const useHabitSlice = create(
             }),
 
             cancelDoneHabit: (habitId: string, date: string) => set((state) => {
+                const completed = state.completed[habitId];
+
+                if(!completed) return;
+
                 delete state.completed[habitId][date];
             })
         })),

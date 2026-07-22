@@ -2,7 +2,7 @@ import { useUiSlice } from "../store/uiSlice";
 import { useHabitSlice } from "../store/habitsSlice";
 import { io } from "../lib/io";
 import { notifications } from '@mantine/notifications';
-import { Group, Title, Select, Switch, Button, FileButton } from "@mantine/core";
+import { Group, Flex, Title, Select, Switch, Button, FileButton } from "@mantine/core";
 
 
 export default function FilterBar() {
@@ -26,30 +26,38 @@ export default function FilterBar() {
         const a = document.createElement("a");
         a.href = url;
         a.download = "habits.json";
-        a.click(); 
+        a.click();
         URL.revokeObjectURL(url)
     }
 
     async function handleImport(file: File | null) {
         if(!file) return;
-        
+
         const raw = await file.text();
         const result = importState(raw);
 
         if(result.ok) {
+            if (habits.length > 0 && !window.confirm('Импорт заменит все текущие привычки. Продолжить?')) {
+                return;
+            }
             return importData(result.data);
         }
-        
+
         notifications.show({
             title: 'Ошибка импорта',
             message: result.error,
             color: 'red',
         });
     }
-    
+
     return(
         /* Navbar */
-        <Group justify="space-between" align="flex-end">
+        <Flex
+            direction={{ base: 'column', sm: 'row' }}
+            justify="space-between"
+            align={{ base: 'stretch', sm: 'flex-end' }}
+            gap="md"
+        >
             <Group>
                 <Title order={2}>{`Habit tracker (${habits.length})`}</Title>
 
@@ -59,10 +67,10 @@ export default function FilterBar() {
                     {(props) => <Button {...props}>Импорт</Button>}
                 </FileButton>
             </Group>
-            
+
             <Group>
-                <Switch 
-                    label="Только активные сегодня" 
+                <Switch
+                    label="Только активные сегодня"
                     checked={onlyDueToday}
                     onChange={() => toggleFilter('onlyDueToday')}
                 />
@@ -71,7 +79,7 @@ export default function FilterBar() {
                     checked={hideCompletedToday}
                     onChange={() => toggleFilter('hideCompletedToday')}
                 />
-                <Select 
+                <Select
                     label='Сортировка'
                     data={[
                         { value: 'name', label: 'По имени' },
@@ -84,8 +92,6 @@ export default function FilterBar() {
                     }}
                 />
             </Group>
-        </Group>
+        </Flex>
     )
 }
-
-

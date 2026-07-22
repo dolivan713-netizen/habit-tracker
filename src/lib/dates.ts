@@ -25,9 +25,9 @@ export const dates = {
             ? getInitialExpected(todayIso, schedule) 
             : getPreviousScheduledDate(todayIso, schedule)
 
-        const dates = Object.keys(habitCompleted).sort((a, b) => b.localeCompare(a));
+        const completedDates = Object.keys(habitCompleted).sort((a, b) => b.localeCompare(a));
 
-        dates.forEach(date => {
+        completedDates.forEach(date => {
             const noteDate = parseISO(date); // из строки в формат даты
 
             if (!isSameDay(noteDate, expected)) { // проверяем чтобы это были одинаковые даты 
@@ -52,9 +52,9 @@ export const dates = {
         
         let streak = 0;
 
-        const dates = Object.keys(habitCompleted).sort((a, b) => b.localeCompare(a));
+        const completedDates = Object.keys(habitCompleted).sort((a, b) => b.localeCompare(a));
 
-        for (const date of dates) {
+        for (const date of completedDates) {
             const noteDate = parseISO(date);
 
             if (!isSameDay(noteDate, expected)) break; // с помощью parseISO из ISO в объект Date, isSameDay проверяет чтобы это были одинаковые даты

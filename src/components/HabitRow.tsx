@@ -1,7 +1,7 @@
 import { useHabitSlice } from "../store/habitsSlice";
 import DayCell from "./DayCell";
 import EditingTitle from "./EditingTitle";
-import { Group, ActionIcon, Text, ColorSwatch, Paper } from "@mantine/core";
+import { Group, Flex, ActionIcon, Text, ColorSwatch, Paper } from "@mantine/core";
 import { subDays, eachDayOfInterval, format, parseISO } from 'date-fns';
 import type { HabitCompleted, Habit} from "../types";
 import { dates } from "../lib/dates";
@@ -33,30 +33,45 @@ export default function HabitRow({today, habitCompleted, habit}: Props, ) {
 
     return (
         <Paper withBorder p="sm">
-            <Group justify="space-between" wrap="nowrap">
+            <Flex
+                direction={{ base: 'column', sm: 'row' }}
+                align={{ base: 'stretch', sm: 'center' }}
+                justify="space-between"
+                gap="sm"
+            >
 
-                <Group gap="sm" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
-                    <ColorSwatch
-                        color={habit.color}
-                        size={28}
-                        radius="xl"
-                        withShadow={false}
-                    />
-                    <EditingTitle
-                        editing={isEditing}
-                        id={habit.id}
-                        name={habit.name}
-                        onEditing={handleEditing}
-                    />
+                <Group justify="space-between" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
+                    <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
+                        <ColorSwatch
+                            color={habit.color}
+                            size={28}
+                            radius="xl"
+                            withShadow={false}
+                            style={{ flexShrink: 0 }}
+                        />
+                        <EditingTitle
+                            editing={isEditing}
+                            id={habit.id}
+                            name={habit.name}
+                            onEditing={handleEditing}
+                        />
+                    </Group>
+
+                    <Group gap={4} wrap="nowrap">
+                        <Text
+                            size="sm"
+                            c="dimmed"
+                            style={{ whiteSpace: 'nowrap' }}
+                            title="Рекорд · Подряд · Выполнение за 30 дней"
+                        >
+                            🏆 {bestStreak(habitCompleted, habit.frequency, today)} · 🔥 {streak(habitCompleted, habit.frequency, today)} · {rating(habitCompleted, habit.frequency, today)}%
+                        </Text>
+                        <ActionIcon variant="subtle" size="lg" aria-label="Редактировать" onClick={() => setEditing(true)}>✏️</ActionIcon>
+                        <ActionIcon variant="subtle" color="red" size="lg" aria-label="Удалить" onClick={() => deleteHabit(habit.id)}>🗑️</ActionIcon>
+                    </Group>
                 </Group>
 
-                <Group gap="md" wrap="nowrap">
-                    <Text size="sm" c="dimmed">Рекорд: {bestStreak(habitCompleted, habit.frequency, today)}</Text>
-                    <Text size="sm" c="dimmed">Подряд: {streak(habitCompleted, habit.frequency, today)}</Text>
-                    <Text size="sm" c="dimmed">30д: {rating(habitCompleted, habit.frequency, today)}%</Text>
-                </Group>
-
-                <Group gap={4} wrap="nowrap">
+                <Flex gap={4} justify={{ base: 'space-between', sm: 'flex-end' }}>
                     {cellDays.map(cellDay => {
                         const { stateProp, fnProp, day} = cellDay;
 
@@ -69,14 +84,9 @@ export default function HabitRow({today, habitCompleted, habit}: Props, ) {
                             />
                         )
                     })}
-                </Group>
+                </Flex>
 
-                <Group gap={4} wrap="nowrap">
-                    <ActionIcon variant="subtle" size="lg" aria-label="Редактировать" onClick={() => setEditing(true)}>✏️</ActionIcon>
-                    <ActionIcon variant="subtle" color="red" size="lg" aria-label="Удалить" onClick={() => deleteHabit(habit.id)}>🗑️</ActionIcon>
-                </Group>
-
-            </Group>
+            </Flex>
         </Paper>
     )
 }

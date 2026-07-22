@@ -32,7 +32,7 @@ export default function useDayCellAction({daysOfWeek, id, createdAt, today, freq
         const dayFormat = format(day, 'yyyy-MM-dd');
 
         //проверка чтобы последний день был не раньше даты создания привычеки, если раньше то день обычный
-        const checkDate = isBefore(day, startOfDay(new Date(createdAt))); 
+        const checkDate = isBefore(day, startOfDay(parseISO(createdAt)));
         if (checkDate) {
             return {
                 stateProp, fnProp, day

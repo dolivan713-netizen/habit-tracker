@@ -43,7 +43,7 @@ export default function useFilteredHabits({completed, habits, filters, today}: P
                 sortedHabit.sort((a, b) => a.name.localeCompare(b.name))
                 break;
             case "createdAt":
-                sortedHabit.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+                sortedHabit.sort((a, b) => parseISO(a.createdAt).getTime() - parseISO(b.createdAt).getTime());
                 break;
         }
 

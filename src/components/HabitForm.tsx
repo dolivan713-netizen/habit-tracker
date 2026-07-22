@@ -1,5 +1,5 @@
 import { useHabitSlice } from "../store/habitsSlice";
-import { Stack, TextInput, Button, Switch, Text, Group, ColorSwatch, Paper } from "@mantine/core";
+import { Stack, TextInput, Button, Switch, Text, Group, Flex, ColorSwatch, Paper } from "@mantine/core";
 import { useState } from "react";
 import type { Day } from "date-fns";
 import type { NewHabit } from "../types";
@@ -25,30 +25,31 @@ const DAY_LABELS: Record<Days, string> = {
     sunday: 'Вс',
 };
 
+const EMPTY_WEEK: Record<Days, boolean> = {
+    monday: false,
+    tuesday: false,
+    wednesday: false,
+    thursday: false,
+    friday: false,
+    saturday: false,
+    sunday: false,
+};
+
+const INITIAL_PERIOD = { everyDay: false, onWeekDays: false, week: EMPTY_WEEK };
+
 export default function HabitForm() {
-    
+
     const addHabit = useHabitSlice(state => state.addHabit);
     const [name, setName] = useState('');
-    const [color, setColor] = useState(''); 
+    const [color, setColor] = useState('');
     const [error, setError] = useState('');
-    const [period, setPeriod] = useState({
-        everyDay: false,
-        onWeekDays: false,
-        week: {
-            'monday': false,  
-            'tuesday': false,
-            'wednesday': false,
-            'thursday': false,
-            'friday': false,
-            'saturday': false,
-            'sunday': false
-        }
-    });
+    const [period, setPeriod] = useState(INITIAL_PERIOD);
     const daysOfWeek: Days[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
-    function handleAddHabit(day: Days) {
+    function toggleDay(day: Days) {
         setPeriod(prev => ({
-            ...prev,
+            everyDay: false,
+            onWeekDays: false,
             week: {
                 ...prev.week,
                 [day]: !prev.week[day]
@@ -56,55 +57,56 @@ export default function HabitForm() {
         }))
     }
 
+    function togglePreset(preset: 'everyDay' | 'onWeekDays') {
+        setPeriod(prev => ({
+            everyDay: preset === 'everyDay' ? !prev.everyDay : false,
+            onWeekDays: preset === 'onWeekDays' ? !prev.onWeekDays : false,
+            week: EMPTY_WEEK
+        }))
+    }
+
     function checkDays() {
         const dayNumber = (dayString: string) => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].indexOf(dayString.toLowerCase());
-        
+
         if (period.onWeekDays) {
             return [1, 2, 3, 4, 5];
         } else if (period.everyDay) {
             return [0, 1, 2, 3, 4, 5, 6]
-        } else { 
+        } else {
             return Object.entries(period.week).filter((value) => value[1]).map((keys) => dayNumber(keys[0])) as Day[];
         }
     }
 
     function addHabitCheck() {
         const days = checkDays() as Day[];
-    
-        if (name.length < 3) return setError('Не корректное имя')
+        const trimmedName = name.trim();
+
+        if (trimmedName.length < 3) return setError('Некорректное имя')
         if (color === '') return setError('Цвет не выбран');
-        if (days.length === 0) return setError('Частота привычки не выброна');
+        if (days.length === 0) return setError('Частота привычки не выбрана');
 
         const newHabit: NewHabit = {
-            name: name,
+            name: trimmedName,
             color: color,
             frequency: days
         }
-    
+
         addHabit(newHabit);
         setColor('');
         setName('');
         setError('');
-        setPeriod({
-            everyDay: false,
-            onWeekDays: false,
-            week: {
-                'monday': false,  
-                'tuesday': false,
-                'wednesday': false,
-                'thursday': false,
-                'friday': false,
-                'saturday': false,
-                'sunday': false
-            }
-        });
+        setPeriod(INITIAL_PERIOD);
     }
 
     return (
         <Paper withBorder p="md">
             <Stack gap="md">
 
-                <Group gap="lg" align="flex-end">
+                <Flex
+                    direction={{ base: 'column', sm: 'row' }}
+                    align={{ base: 'stretch', sm: 'flex-end' }}
+                    gap="lg"
+                >
                     <TextInput
                         label="Название"
                         value={name}
@@ -136,7 +138,7 @@ export default function HabitForm() {
                             ))}
                         </Group>
                     </Stack>
-                </Group>
+                </Flex>
 
                 <Stack gap={6}>
                     <Text size="sm" fw={500}>Период</Text>
@@ -144,21 +146,23 @@ export default function HabitForm() {
                         <Switch
                             label="Каждый день"
                             checked={period.everyDay}
-                            onChange={() => setPeriod(prev => ({...prev, everyDay: !prev.everyDay, onWeekDays: false}))} 
+                            onChange={() => togglePreset('everyDay')}
                         />
 
                         <Switch
                             label="По будням"
                             checked={period.onWeekDays}
-                            onChange={() => setPeriod(prev => ({...prev, onWeekDays: !prev.onWeekDays, everyDay: false}))}
+                            onChange={() => togglePreset('onWeekDays')}
                         />
+                    </Group>
 
+                    <Group gap="xs">
                         {daysOfWeek.map((day: Days) => (
                             <Switch
                                 key={day}
                                 label={DAY_LABELS[day]}
                                 checked={period.week[day]}
-                                onChange={() => handleAddHabit(day)}
+                                onChange={() => toggleDay(day)}
                             />
                         ))}
                     </Group>
